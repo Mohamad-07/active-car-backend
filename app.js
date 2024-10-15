@@ -24,7 +24,7 @@ cloudinary.config({
 });
 
 app.use(cors({
-  origin: 'https://activecarspk.com/',
+  origin: ['http://localhost:3000','https://activecarspk.com/'],
   credentials: true,
 }));
 app.use(bodyParser.json({ limit: '200mb' }));
