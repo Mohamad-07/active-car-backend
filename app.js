@@ -31,7 +31,9 @@ app.use(bodyParser.json({ limit: '200mb' }));
 app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.get('/',(req,res)=>{
+  res.send("Render Working...")
+})
 app.post('/api/login', authController.login);
 
 app.use('/api/upload-auction', uploadAuctionRoutes);
