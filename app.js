@@ -7,7 +7,9 @@ const connectDB = require('./config/db');
 const saleCarRoutes = require('./routes/saleCar');
 const auctionCarRoutes = require('./routes/auctionCar');
 const authController = require('./controllers/auth');
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary').v2; 
+const uploadAuctionRoutes = require('./routes/uploadAuction');
+const uploadSaleRoutes = require('./routes/uploadSale');
 
 dotenv.config();
 
@@ -21,10 +23,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Define allowed origins dynamically
 const allowedOrigins = ['http://localhost:3000', 'https://activecarspk.com', 'https://binakhtar.com'];
 
-// Use CORS middleware with a dynamic origin check
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -37,26 +37,21 @@ app.use(cors({
   credentials: true,
 }));
 
-// Set body parser limits to handle large requests
 app.use(bodyParser.json({ limit: '200mb' }));
 app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
 
-// Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Basic route to test if the server is working
-app.get('/', (req, res) => {
-  res.send('Render Working...');
-});
-
-// Define API routes
+app.get('/',(req,res)=>{
+  res.send("Render Working...")
+})
 app.post('/api/login', authController.login);
+
 app.use('/api/upload-auction', uploadAuctionRoutes);
 app.use('/api/upload-sale', uploadSaleRoutes);
+
 app.use('/api/cars-for-sale', saleCarRoutes);
 app.use('/api/cars-for-auction', auctionCarRoutes);
 
-// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
