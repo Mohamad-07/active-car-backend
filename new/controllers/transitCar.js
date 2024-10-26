@@ -1,7 +1,7 @@
-const SaleCar = require("../models/saleCar");
+const TransitCar = require("../models/transitCar");
 const cloudinary = require("cloudinary").v2;
 
-exports.uploadImagesSale = async (req, res) => {
+exports.uploadImagesTransit = async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(200).json({ images: [] });
@@ -10,7 +10,7 @@ exports.uploadImagesSale = async (req, res) => {
     const uploadPromises = req.files.map((file) => {
       return new Promise((resolve, reject) => {
         cloudinary.uploader
-          .upload_stream({ folder: "sale_car_images" }, (error, result) => {
+          .upload_stream({ folder: "transit_car_images" }, (error, result) => {
             if (error) return reject(error);
             console.log("Uploaded image URL:", result.secure_url);
             resolve(result.secure_url);
@@ -27,103 +27,101 @@ exports.uploadImagesSale = async (req, res) => {
   }
 };
 
-exports.getAllSaleCars = async (req, res) => {
+exports.getAllTransitCars = async (req, res) => {
   try {
-    const cars = await SaleCar.find();
+    const cars = await TransitCar.find();
     res.status(200).json(cars);
   } catch (error) {
     res.status(500).json({
-      message: "An error occurred while fetching the Sale cars",
+      message: "An error occurred while fetching the Transit cars",
       error: error.message,
     });
   }
 };
 
-exports.getSaleCarById = async (req, res) => {
+exports.getTransitCarById = async (req, res) => {
   try {
-    const car = await SaleCar.findById(req.params.id);
+    const car = await TransitCar.findById(req.params.id);
     if (!car) {
-      return res.status(404).json({ message: "Sale Car not found" });
+      return res.status(404).json({ message: "Transit Car not found" });
     }
     res.status(200).json(car);
   } catch (error) {
     res.status(500).json({
-      message: "An error occurred while fetching the sale car",
+      message: "An error occurred while fetching the transit car",
       error: error.message,
     });
   }
 };
 
-exports.createSaleCar = async (req, res) => {
+exports.createTransitCar = async (req, res) => {
   try {
     const carDetails = {
       ...req.body,
       details: JSON.parse(req.body.details || '{}'),
       options: JSON.parse(req.body.options || '{}'),
       exteriorCondition: JSON.parse(req.body.exteriorCondition || '{}'),
-      isSold: req.body.isSold === 'true'
     };
 
-    const newCar = new SaleCar(carDetails);
+    const newCar = new TransitCar(carDetails);
     const savedCar = await newCar.save();
     res
       .status(201)
-      .json({ message: "Sale Car created successfully!", car: savedCar });
+      .json({ message: "Transit Car created successfully!", car: savedCar });
   } catch (error) {
-    console.error("Error creating Sale car:", error);
+    console.error("Error creating Transit  car:", error);
     res
       .status(500)
       .json({
-        message: "An error occurred while creating the Sale car",
+        message: "An error occurred while creating the Transit car",
         error,
       });
   }
 };
 
-exports.updateSaleCar = async (req, res) => {
+exports.updateTransitCar = async (req, res) => {
   try {
     const carDetails = {
       ...req.body,
       details: JSON.parse(req.body.details || '{}'),
       options: JSON.parse(req.body.options || '{}'),
       exteriorCondition: JSON.parse(req.body.exteriorCondition || '{}'),
-      isSold: req.body.isSold === 'true',
     };
 
-    const updatedCar = await SaleCar.findByIdAndUpdate(
+    const updatedCar = await TransitCar.findByIdAndUpdate(
       req.params.id,
       carDetails,
       { new: true, omitUndefined: true }
     );
 
     if (!updatedCar) {
-      return res.status(404).json({ message: "Sale Car not found" });
+      return res.status(404).json({ message: "Transit Car not found" });
     }
 
     res
       .status(200)
-      .json({ message: "Sale Car updated successfully!", car: updatedCar });
+      .json({ message: "Transit Car updated successfully!", car: updatedCar });
   } catch (error) {
-    console.error("Error updating Sale car:", error);
+    console.error("Error updating Transit car:", error);
     res
       .status(500)
       .json({
-        message: "An error occurred while updating the Sale car",
+        message: "An error occurred while updating the Transit car",
         error,
       });
   }
 };
 
-exports.deleteSaleCar = async (req, res) => {
+exports.deleteTransitCar = async (req, res) => {
   try {
-    const deletedCar = await SaleCar.findByIdAndDelete(req.params.id);
+    const deletedCar = await TransitCar.findByIdAndDelete(req.params.id);
     if (!deletedCar) {
-      return res.status(404).json({ message: "Sale Car not found" });
+      return res.status(404).json({ message: "Transit Car not found" });
     }
-    res.status(200).json({ message: "Sale Car deleted successfully!" });
+    res.status(200).json({ message: "Transit Car deleted successfully!" });
   } catch (error) {
     res.status(500).json({
-      message: "An error occurred while deleting the Sale car",
+      message: "An error occurred while deleting the Transit car",
       error: error.message,
     });
   }

@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
-const saleCarSchema = new mongoose.Schema({
+const transitCarSchema = new mongoose.Schema({
   images: [{ type: String }],
   name: { type: String, required: true },
   price: { type: String, required: true },
-  isSold: { type: Boolean, default: false },
   details: {
     make: { type: String },
     displacement: { type: String },
@@ -41,5 +40,5 @@ const saleCarSchema = new mongoose.Schema({
   note: { type: String },
 });
 
-const SaleCar = mongoose.model("SaleCar", saleCarSchema);
-module.exports = SaleCar;
+const TransitCar = mongoose.model("TransitCar", transitCarSchema);
+module.exports = TransitCar;
